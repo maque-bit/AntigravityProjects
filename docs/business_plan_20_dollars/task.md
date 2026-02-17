@@ -15,6 +15,6 @@
     - [x] 各コンポーネントの動作確認（リモート移行決定）
     - [x] 状況のまとめ（Walkthrough作成）
 - [/] Phase 5: GitHubデプロイと本番設定 `EXECUTION`
-    - [ ] デプロイ用ワークフロー (deploy.yml) の作成
+    - [/] デプロイ用ワークフロー (deploy.yml) の作成・調整
     - [ ] GitHub Pages への Web 公開
-    - [ ] GitHub Packages へのイメージ登録
+    - [ ] GitHub Packages へのイメージ登録と管理
