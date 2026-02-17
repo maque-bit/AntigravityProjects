@@ -9,9 +9,12 @@
 - [x] Phase 1: Podmanローカル環境の構築 `EXECUTION`
 - [x] Phase 2: 管理画面とセキュリティ基盤の実装 `EXECUTION`
 - [x] Phase 3: 各コンポーネントの実装とUI/UX `EXECUTION`
-- [x] Phase 4: 動作検証結果の提示とデプロイ承認 (中断) `VERIFICATION`
+- [x] Phase 4: 動作検証結果の提示とデプロイ承認 (完了) `VERIFICATION`
     - [x] 現状の動作環境の確認
     - [x] 開発環境の起動試行（高負荷により中止）
-    - [ ] 各コンポーネントの動作確認（Admin/Web）
+    - [x] 各コンポーネントの動作確認（リモート移行決定）
     - [x] 状況のまとめ（Walkthrough作成）
-- [ ] （承認後）Phase 5: GitHubデプロイと本番設定 `EXECUTION`
+- [/] Phase 5: GitHubデプロイと本番設定 `EXECUTION`
+    - [ ] デプロイ用ワークフロー (deploy.yml) の作成
+    - [ ] GitHub Pages への Web 公開
+    - [ ] GitHub Packages へのイメージ登録
