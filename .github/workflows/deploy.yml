@@ -30,6 +30,8 @@ jobs:
 
       - name: Build Web
         run: npm run build --prefix src/web
+        env:
+          GH_PAGES_BASE: ${{ secrets.GH_PAGES_BASE }}
 
       - name: Setup Pages
         uses: actions/configure-pages@v4

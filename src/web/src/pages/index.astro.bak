@@ -1,0 +1,67 @@
+---
+import Layout from '../layouts/Layout.astro';
+import fs from 'node:fs';
+import path from 'node:path';
+
+let analysisResult = { analysis: [] };
+try {
+    const dataPath = path.join(process.cwd(), '../data/analysis_result.json');
+    if (fs.existsSync(dataPath)) {
+        analysisResult = JSON.parse(fs.readFileSync(dataPath, 'utf8'));
+    }
+} catch (e) {
+    console.error(e);
+}
+---
+
+<Layout title="MCP Insider | 最新のMCPエコシステム情報">
+    <main class="max-w-4xl mx-auto p-8">
+        <header class="text-center mb-16">
+            <h1 class="text-6xl font-bold bg-gradient-to-r from-blue-400 to-indigo-500 bg-clip-text text-transparent">
+                MCP Insider
+            </h1>
+            <p class="text-xl text-slate-400 mt-4">AIが選ぶ、今週の注目MCPサーバーと活用インサイト</p>
+        </header>
+
+        <div class="grid gap-8">
+            {analysisResult.analysis.length > 0 ? (
+                analysisResult.analysis.map((item) => (
+                    <article class="bg-slate-900/50 border border-slate-800 p-6 rounded-2xl hover:border-indigo-500 transition-colors">
+                        <div class="flex justify-between items-start mb-4">
+                            <h2 class="text-2xl font-bold text-white">{item.name}</h2>
+                            <span class={`px-3 py-1 rounded-full text-sm font-bold ${
+                                item.difficulty === 'Easy' ? 'bg-green-500/10 text-green-400' :
+                                item.difficulty === 'Medium' ? 'bg-yellow-500/10 text-yellow-400' :
+                                'bg-red-500/10 text-red-400'
+                            }`}>
+                                {item.difficulty}
+                            </span>
+                        </div>
+                        <p class="text-slate-300 mb-6">{item.summary}</p>
+                        <div class="flex items-center gap-4">
+                            <div class="flex-1 bg-slate-800 h-2 rounded-full overflow-hidden">
+                                <div class="bg-indigo-500 h-full" style={`width: ${item.trend_score}%`}></div>
+                            </div>
+                            <span class="text-sm font-bold text-indigo-400">Score: {item.trend_score}</span>
+                        </div>
+                    </article>
+                ))
+            ) : (
+                <div class="text-center py-20 bg-slate-900/30 rounded-3xl">
+                    <p class="text-slate-500">現在データを収集中です。管理画面からCollectorを実行してください。</p>
+                </div>
+            )}
+        </div>
+
+        <section class="mt-20 p-8 bg-indigo-600 rounded-3xl text-center">
+            <h3 class="text-3xl font-bold mb-4">最新情報を逃したくない方へ</h3>
+            <p class="mb-8 opacity-90">リードマグネット「MCPサーバー100選」を無料でプレゼント中</p>
+            <div class="flex max-w-md mx-auto gap-2">
+                <input type="email" placeholder="email@example.com" class="flex-1 p-3 rounded-xl bg-white text-slate-900 outline-none">
+                <button class="bg-slate-900 text-white px-6 py-3 rounded-xl font-bold hover:bg-slate-800 transition-colors">
+                    無料で受け取る
+                </button>
+            </div>
+        </section>
+    </main>
+</Layout>

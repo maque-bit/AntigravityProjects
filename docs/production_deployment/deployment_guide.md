@@ -10,7 +10,7 @@ GitHub リポジトリの `Settings` > `Secrets and variables` > `Actions` に�
 | :--- | :--- | :--- |
 | `GEMINI_API_KEY` | 分析用 AI (Gemini) の API キー | ✅ |
 | `GH_WORKSPACE_USER_ID` | データ収集対象の GitHub ユーザー ID | ✅ |
-| `GH_PAGES_BASE` | リポジトリ名（例: `/MCP4Antigravity`） | ✅ |
+| `GH_PAGES_BASE` | リポジトリ名（例: `/AntigravityProjects`） | ✅ |
 
 ## 2. GitHub Pages の有効化
 
