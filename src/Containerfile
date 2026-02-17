@@ -1,0 +1,35 @@
+# 共通ベースイメージ
+FROM node:20-alpine AS base
+# ミラーサイトを日本のミラーに変更
+RUN sed -i 's/dl-cdn.alpinelinux.org/mirror.kakao.com/g' /etc/apk/repositories
+WORKDIR /app
+RUN apk add --no-cache sqlite bash
+
+# --- Admin サービス ---
+FROM base AS admin-dev
+COPY admin/package*.json ./admin/
+RUN npm install --prefix admin
+COPY admin/ ./admin
+EXPOSE 3000
+
+# --- Collector サービス ---
+FROM base AS collector-dev
+COPY collector/package*.json ./collector/
+RUN npm install --prefix collector
+COPY collector/ ./collector
+
+# --- Analyzer サービス ---
+FROM base AS analyzer-dev
+COPY analyzer/package*.json ./analyzer/
+RUN npm install --prefix analyzer
+COPY analyzer/ ./analyzer
+
+# --- Web サービス ---
+FROM base AS web-dev
+COPY web/package*.json ./web/
+RUN npm install --prefix web
+COPY web/ ./web
+EXPOSE 4321
+
+# デフォルト（互換性のため）
+FROM base AS development

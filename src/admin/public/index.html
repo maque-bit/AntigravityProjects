@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MCP Insider Admin</title>
+    <link rel="stylesheet" href="style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>MCP Insider <span class="badge">Admin</span></h1>
+            <p>システム構成と自動化の制御センター</p>
+        </header>
+
+        <main>
+            <section class="card status-section">
+                <h2>コンポーネント制御</h2>
+                <div class="switches" id="component-switches">
+                    <!-- Dynamic content -->
+                </div>
+            </section>
+
+            <section class="card settings-section">
+                <h2>システム設定</h2>
+                <div id="config-fields">
+                    <!-- Dynamic content -->
+                </div>
+                <button id="save-config" class="btn-primary">保存</button>
+            </section>
+
+            <section class="card secrets-section">
+                <h2>機密情報 (API Keys)</h2>
+                <div id="env-fields">
+                    <!-- Dynamic content -->
+                </div>
+            </section>
+        </main>
+
+        <footer>
+            <p>&copy; 2026 MCP Insider Project. AI Managed System.</p>
+        </footer>
+    </div>
+    <script src="script.js"></script>
+</body>
+</html>

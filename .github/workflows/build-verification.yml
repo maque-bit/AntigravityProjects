@@ -1,0 +1,57 @@
+name: Build Verification
+
+on:
+  push:
+    branches: [ main, master ]
+  pull_request:
+    branches: [ main, master ]
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
+      - name: Build Admin
+        uses: docker/build-push-action@v5
+        with:
+          context: ./src
+          file: ./src/Containerfile
+          target: admin-dev
+          push: false
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
+
+      - name: Build Collector
+        uses: docker/build-push-action@v5
+        with:
+          context: ./src
+          file: ./src/Containerfile
+          target: collector-dev
+          push: false
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
+
+      - name: Build Analyzer
+        uses: docker/build-push-action@v5
+        with:
+          context: ./src
+          file: ./src/Containerfile
+          target: analyzer-dev
+          push: false
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
+
+      - name: Build Web
+        uses: docker/build-push-action@v5
+        with:
+          context: ./src
+          file: ./src/Containerfile
+          target: web-dev
+          push: false
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
