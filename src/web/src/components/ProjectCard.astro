@@ -1,0 +1,73 @@
+---
+const { project } = Astro.props;
+const { name, stars, analysis, url } = project;
+
+// Utility function to get color based on score
+const getUtilityColor = (score) => {
+    if (score >= 8) return "text-emerald-400";
+    if (score >= 5) return "text-yellow-400";
+    return "text-slate-400";
+};
+
+const utilityColor = getUtilityColor(analysis?.dev_utility || 0);
+---
+
+<a href={`/AntigravityProjects/projects/${name.replace('/', '_')}`} class="group block h-full">
+    <article class="glass-panel rounded-2xl p-6 h-full transition-all duration-300 hover:scale-[1.02] hover:border-indigo-500/50 hover:shadow-lg hover:shadow-indigo-500/10 flex flex-col relative overflow-hidden">
+        <!-- Shine Effect -->
+        <div class="absolute inset-0 bg-gradient-to-r from-transparent via-white/5 to-transparent -translate-x-full group-hover:animate-[shimmer_1.5s_infinite]"></div>
+
+        <header class="flex justify-between items-start mb-4 relative z-10">
+            <div>
+                <h3 class="text-xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-white to-gray-400 group-hover:from-indigo-300 group-hover:to-white transition-colors duration-300">
+                    {name.split('/')[1] || name}
+                </h3>
+                <p class="text-xs text-gray-500 font-mono mt-1">{name.split('/')[0]}</p>
+            </div>
+            <div class="flex items-center gap-1 bg-slate-900/50 px-2 py-1 rounded-lg border border-slate-800">
+                <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4 text-yellow-500" viewBox="0 0 24 24" fill="currentColor">
+                    <path fill-rule="evenodd" d="M10.788 3.21c.448-1.077 1.976-1.077 2.424 0l2.082 5.007 5.404.433c1.164.093 1.636 1.545.749 2.305l-4.117 3.527 1.257 5.273c.271 1.136-.964 2.033-1.96 1.425L12 18.354 7.373 21.175c-.996.608-2.231-.29-1.96-1.425l1.257-5.273-4.117-3.527c-.887-.76-.415-2.212.749-2.305l5.404-.433 2.082-5.006z" clip-rule="evenodd" />
+                </svg>
+                <span class="font-mono text-sm">{stars.toLocaleString()}</span>
+            </div>
+        </header>
+        
+        <div class="mb-4 relative z-10">
+            <p class="text-lg font-bold text-transparent bg-clip-text bg-gradient-to-r from-indigo-400 to-purple-400 mb-2 leading-tight">
+                {analysis?.catchphrase || "No catchphrase generated."}
+            </p>
+            <p class="text-sm text-gray-400 line-clamp-2">
+                {analysis?.summary_ja || "No summary available."}
+            </p>
+        </div>
+
+        <div class="mt-auto pt-4 border-t border-gray-800 relative z-10">
+            <div class="flex flex-wrap gap-2 mb-3">
+                {analysis?.category?.slice(0, 3).map((cat) => (
+                    <span class="px-2 py-0.5 text-xs rounded-full bg-slate-800 border border-slate-700 text-slate-300">
+                        {cat}
+                    </span>
+                ))}
+            </div>
+            
+            <div class="flex items-center justify-between text-xs font-mono">
+                <div class="flex items-center gap-2">
+                    <span class="text-gray-500">DEV UTILITY</span>
+                    <div class="flex gap-0.5">
+                        {[...Array(10)].map((_, i) => (
+                            <div class={`w-1 h-3 rounded-full ${i < (analysis?.dev_utility || 0) ? (analysis?.dev_utility >= 8 ? 'bg-emerald-500' : 'bg-indigo-500') : 'bg-gray-800'}`}></div>
+                        ))}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </article>
+</a>
+
+<style>
+    @keyframes shimmer {
+        100% {
+            transform: translateX(100%);
+        }
+    }
+</style>

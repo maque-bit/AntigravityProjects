@@ -1,0 +1,15 @@
+{
+  "collector": {
+    "enabled": true,
+    "github_user_id": "REPLACE_ME",
+    "interval_hours": 24
+  },
+  "analyzer": {
+    "enabled": true,
+    "model": "gemini-1.5-flash"
+  },
+  "web": {
+    "enabled": true,
+    "site_title": "MCP Insider"
+  }
+}
