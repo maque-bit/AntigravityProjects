@@ -23,13 +23,13 @@ jobs:
         with:
           node-version: 20
           cache: 'npm'
-          cache-dependency-path: './src/web/package-lock.json'
+          cache-dependency-path: './web/package-lock.json'
 
       - name: Install dependencies
-        run: npm ci --prefix src/web
+        run: npm ci --prefix web
 
       - name: Build Web
-        run: npm run build --prefix src/web
+        run: npm run build --prefix web
         env:
           GH_PAGES_BASE: ${{ vars.GH_PAGES_BASE }}
 
@@ -39,7 +39,7 @@ jobs:
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
         with:
-          path: './src/web/dist'
+          path: './web/dist'
 
       - name: Deploy to GitHub Pages
         id: deployment
@@ -74,8 +74,8 @@ jobs:
       - name: Build and push
         uses: docker/build-push-action@v5
         with:
-          context: ./src
-          file: ./src/Containerfile
+          context: .
+          file: ./Containerfile
           target: ${{ matrix.target }}
           push: true
           tags: |
