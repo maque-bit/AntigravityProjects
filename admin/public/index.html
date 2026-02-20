@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="ja">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -7,11 +8,21 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://unpkg.com/lucide@latest"></script>
     <style>
-        .tab-content { display: none; }
-        .tab-content.active { display: block; }
-        .tab-btn.active { border-bottom: 2px solid #2563eb; color: #2563eb; }
+        .tab-content {
+            display: none;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        .tab-btn.active {
+            border-bottom: 2px solid #2563eb;
+            color: #2563eb;
+        }
     </style>
 </head>
+
 <body class="bg-gray-50 text-gray-800">
     <div class="max-w-6xl mx-auto p-6">
         <header class="flex justify-between items-center mb-8 border-b pb-4">
@@ -25,8 +36,10 @@
 
         <!-- Tabs -->
         <div class="flex border-b mb-6">
-            <button class="tab-btn active px-4 py-2 font-medium text-gray-600 hover:text-blue-600" onclick="switchTab('control')">Control Panel</button>
-            <button class="tab-btn px-4 py-2 font-medium text-gray-600 hover:text-blue-600" onclick="switchTab('data')">Data Maintenance</button>
+            <button class="tab-btn active px-4 py-2 font-medium text-gray-600 hover:text-blue-600"
+                onclick="switchTab('control')">Control Panel</button>
+            <button class="tab-btn px-4 py-2 font-medium text-gray-600 hover:text-blue-600"
+                onclick="switchTab('data')">Data Maintenance</button>
         </div>
 
         <!-- Control Panel Tab -->
@@ -34,16 +47,23 @@
             <section class="bg-white p-6 rounded-lg shadow-sm border border-gray-200">
                 <h2 class="text-xl font-semibold mb-4">Operations</h2>
                 <div class="flex gap-4">
-                    <button onclick="runScript('collect')" class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-md flex items-center gap-2">
+                    <button onclick="runScript('collect')"
+                        class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-md flex items-center gap-2">
                         <i data-lucide="download" class="w-4 h-4"></i> Run Collector
                     </button>
-                    <button onclick="runScript('analyze')" class="bg-purple-600 hover:bg-purple-700 text-white px-4 py-2 rounded-md flex items-center gap-2">
+                    <button onclick="runScript('analyze')"
+                        class="bg-purple-600 hover:bg-purple-700 text-white px-4 py-2 rounded-md flex items-center gap-2">
                         <i data-lucide="cpu" class="w-4 h-4"></i> Run Analyzer
+                    </button>
+                    <button onclick="deployToGitHub()"
+                        class="bg-emerald-600 hover:bg-emerald-700 text-white px-4 py-2 rounded-md flex items-center gap-2 ml-auto shadow-sm">
+                        <i data-lucide="upload-cloud" class="w-4 h-4"></i> Deploy to Live Site
                     </button>
                 </div>
                 <!-- Output Log Viewer placeholder -->
                 <div class="mt-4">
-                    <pre id="log-output" class="bg-gray-900 text-gray-100 p-4 rounded-md h-40 overflow-y-auto text-sm hidden"></pre>
+                    <pre id="log-output"
+                        class="bg-gray-900 text-gray-100 p-4 rounded-md h-40 overflow-y-auto text-sm hidden"></pre>
                 </div>
             </section>
 
@@ -56,19 +76,26 @@
                             <span class="text-sm text-gray-500">Temporarily hide the site from public view.</span>
                         </div>
                         <label class="relative inline-flex items-center cursor-pointer">
-                            <input type="checkbox" id="setting-maintenance" class="sr-only peer" onchange="saveSettings()">
-                            <div class="w-11 h-6 bg-gray-200 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-blue-600"></div>
+                            <input type="checkbox" id="setting-maintenance" class="sr-only peer"
+                                onchange="saveSettings()">
+                            <div
+                                class="w-11 h-6 bg-gray-200 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-blue-600">
+                            </div>
                         </label>
                     </div>
-                    
+
                     <div class="flex items-center justify-between">
                         <div>
                             <span class="font-medium block">Auto Publish</span>
-                            <span class="text-sm text-gray-500">Skip draft stage and publish analysis immediately.</span>
+                            <span class="text-sm text-gray-500">Skip draft stage and publish analysis
+                                immediately.</span>
                         </div>
                         <label class="relative inline-flex items-center cursor-pointer">
-                            <input type="checkbox" id="setting-auto-publish" class="sr-only peer" onchange="saveSettings()">
-                            <div class="w-11 h-6 bg-gray-200 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-blue-600"></div>
+                            <input type="checkbox" id="setting-auto-publish" class="sr-only peer"
+                                onchange="saveSettings()">
+                            <div
+                                class="w-11 h-6 bg-gray-200 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-blue-600">
+                            </div>
                         </label>
                     </div>
 
@@ -77,7 +104,8 @@
                             <span class="font-medium block">Retention Period (Days)</span>
                             <span class="text-sm text-gray-500">How long to keep analyzed data.</span>
                         </div>
-                        <input type="number" id="setting-retention" class="border rounded px-2 py-1 w-20 text-center" onchange="saveSettings()">
+                        <input type="number" id="setting-retention" class="border rounded px-2 py-1 w-20 text-center"
+                            onchange="saveSettings()">
                     </div>
                 </div>
             </section>
@@ -88,7 +116,8 @@
             <div class="bg-white p-6 rounded-lg shadow-sm border border-gray-200">
                 <div class="flex justify-between items-center mb-4">
                     <h2 class="text-xl font-semibold">Analyzed Projects</h2>
-                    <input type="text" id="search-data" placeholder="Search projects..." class="border rounded px-3 py-1 text-sm w-64" onkeyup="filterData()">
+                    <input type="text" id="search-data" placeholder="Search projects..."
+                        class="border rounded px-3 py-1 text-sm w-64" onkeyup="filterData()">
                 </div>
                 <div class="overflow-x-auto">
                     <table class="w-full text-left text-sm" id="data-table">
@@ -114,14 +143,17 @@
         <div class="bg-white rounded-lg shadow-xl w-full max-w-2xl max-h-[90vh] flex flex-col">
             <div class="p-6 border-b flex justify-between items-center bg-gray-50 rounded-t-lg">
                 <h3 class="text-xl font-bold" id="modal-title">Edit Project</h3>
-                <button onclick="closeModal()" class="text-gray-500 hover:text-gray-800"><i data-lucide="x"></i></button>
+                <button onclick="closeModal()" class="text-gray-500 hover:text-gray-800"><i
+                        data-lucide="x"></i></button>
             </div>
             <div class="p-6 overflow-y-auto space-y-4 flex-1" id="modal-content">
                 <!-- Inputs populated by JS -->
             </div>
             <div class="p-6 border-t bg-gray-50 rounded-b-lg flex justify-end gap-3">
-                <button onclick="closeModal()" class="px-4 py-2 border rounded-md text-gray-600 hover:bg-gray-100">Cancel</button>
-                <button onclick="saveEdit()" class="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-md">Save Changes</button>
+                <button onclick="closeModal()"
+                    class="px-4 py-2 border rounded-md text-gray-600 hover:bg-gray-100">Cancel</button>
+                <button onclick="saveEdit()" class="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-md">Save
+                    Changes</button>
             </div>
         </div>
     </div>
@@ -140,7 +172,7 @@
             if (tabId === 'data') loadData();
         }
 
-        function showLog(text, isError=false) {
+        function showLog(text, isError = false) {
             const logBox = document.getElementById('log-output');
             logBox.classList.remove('hidden');
             logBox.textContent = text;
@@ -155,7 +187,7 @@
                 document.getElementById('setting-maintenance').checked = settings.maintenance_mode;
                 document.getElementById('setting-auto-publish').checked = settings.auto_publish;
                 document.getElementById('setting-retention').value = settings.retention_days;
-                
+
                 const indicator = document.getElementById('status-indicator');
                 if (settings.maintenance_mode) {
                     indicator.textContent = 'MAINTENANCE MODE';
@@ -170,17 +202,38 @@
         }
 
         async function saveSettings() {
+            const saveBtn = document.getElementById('setting-maintenance');
+            const statusIndicator = document.getElementById('status-indicator');
+
             const settings = {
                 maintenance_mode: document.getElementById('setting-maintenance').checked,
                 auto_publish: document.getElementById('setting-auto-publish').checked,
                 retention_days: parseInt(document.getElementById('setting-retention').value, 10)
             };
-            await fetch('/api/settings', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify(settings)
-            });
-            loadSettings(); // update UI indicator
+
+            try {
+                const res = await fetch('/api/settings', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(settings)
+                });
+                const result = await res.json();
+                if (!result.success) throw new Error(result.error || 'Failed to save settings');
+
+                // Update UI indicator locally for instant feedback
+                if (settings.maintenance_mode) {
+                    statusIndicator.textContent = 'MAINTENANCE MODE';
+                    statusIndicator.className = 'px-3 py-1 rounded-full text-sm font-semibold bg-red-100 text-red-800';
+                } else {
+                    statusIndicator.textContent = 'LIVE';
+                    statusIndicator.className = 'px-3 py-1 rounded-full text-sm font-semibold bg-green-100 text-green-800';
+                }
+                console.log('Settings saved successfully');
+            } catch (e) {
+                showLog(`Save failed: ${e.message}`, true);
+                // Revert toggle on failure
+                loadSettings();
+            }
         }
 
         async function runScript(type) {
@@ -189,6 +242,19 @@
                 const res = await fetch(`/api/${type}`, { method: 'POST' });
                 const json = await res.json();
                 if (json.success) showLog(json.stdout || 'Success.');
+                else showLog(json.error || json.stderr, true);
+            } catch (e) {
+                showLog(e.message, true);
+            }
+        }
+
+        async function deployToGitHub() {
+            if (!confirm("Are you sure you want to push current data to GitHub and trigger a live deployment?")) return;
+            showLog("Committing data and pushing to GitHub... This will trigger the GitHub Pages rebuild.");
+            try {
+                const res = await fetch(`/api/deploy`, { method: 'POST' });
+                const json = await res.json();
+                if (json.success) showLog(json.stdout + "\n\nDeploy triggered! It may take a few minutes for GitHub Pages to update.");
                 else showLog(json.error || json.stderr, true);
             } catch (e) {
                 showLog(e.message, true);
@@ -209,16 +275,16 @@
         function renderData() {
             const tbody = document.getElementById('data-list');
             const search = document.getElementById('search-data').value.toLowerCase();
-            
+
             tbody.innerHTML = '';
             appData.filter(p => !search || p.name.toLowerCase().includes(search) || (p.analysis && p.analysis.summary_ja.includes(search)))
-                   .forEach(p => {
-                const statusColor = p.status === 'published' ? 'bg-green-100 text-green-800' : 'bg-yellow-100 text-yellow-800';
-                const date = p.analyzed_at ? new Date(p.analyzed_at).toLocaleDateString() : '-';
-                const safeUrl = encodeURIComponent(p.url);
-                
-                const tr = document.createElement('tr');
-                tr.innerHTML = `
+                .forEach(p => {
+                    const statusColor = p.status === 'published' ? 'bg-green-100 text-green-800' : 'bg-yellow-100 text-yellow-800';
+                    const date = p.analyzed_at ? new Date(p.analyzed_at).toLocaleDateString() : '-';
+                    const safeUrl = encodeURIComponent(p.url);
+
+                    const tr = document.createElement('tr');
+                    tr.innerHTML = `
                     <td class="px-4 py-3 font-medium">${p.name}</td>
                     <td class="px-4 py-3"><span class="px-2 py-1 rounded-full text-xs font-semibold ${statusColor}">${p.status || 'draft'}</span></td>
                     <td class="px-4 py-3 text-gray-500">${date}</td>
@@ -228,8 +294,8 @@
                         <button onclick="deleteProject('${safeUrl}')" class="text-red-600 hover:bg-red-50 p-1 rounded"><i data-lucide="trash-2" class="w-4 h-4"></i></button>
                     </td>
                 `;
-                tbody.appendChild(tr);
-            });
+                    tbody.appendChild(tr);
+                });
             lucide.createIcons();
         }
 
@@ -251,7 +317,7 @@
         }
 
         async function deleteProject(safeUrl) {
-            if(!confirm("Are you sure you want to delete this project?")) return;
+            if (!confirm("Are you sure you want to delete this project?")) return;
             await fetch(`/api/data/${safeUrl}`, { method: 'DELETE' });
             loadData();
         }
@@ -260,12 +326,12 @@
             currentEditUrl = safeUrl;
             const p = appData.find(x => encodeURIComponent(x.url) === safeUrl);
             if (!p) return;
-            
+
             document.getElementById('modal-title').textContent = `Edit: ${p.name}`;
             const c = document.getElementById('modal-content');
-            
+
             const analysis = p.analysis || {};
-            
+
             c.innerHTML = `
                 <div>
                     <label class="block text-sm font-medium mb-1">Status</label>
@@ -287,7 +353,7 @@
                     <textarea id="edit-wow" class="w-full border rounded p-2 h-16">${analysis.wow_factor || ''}</textarea>
                 </div>
             `;
-            
+
             document.getElementById('edit-modal').classList.remove('hidden');
         }
 
@@ -298,7 +364,7 @@
         async function saveEdit() {
             const p = appData.find(x => encodeURIComponent(x.url) === currentEditUrl);
             const status = document.getElementById('edit-status').value;
-            
+
             const updates = { status };
             if (p.analysis) {
                 updates.analysis = {
@@ -308,13 +374,13 @@
                     wow_factor: document.getElementById('edit-wow').value
                 };
             }
-            
+
             await fetch(`/api/data/${currentEditUrl}`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify(updates)
             });
-            
+
             closeModal();
             loadData();
         }
@@ -323,4 +389,5 @@
         loadSettings();
     </script>
 </body>
+
 </html>

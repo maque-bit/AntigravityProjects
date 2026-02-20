@@ -18,12 +18,16 @@ try {
 
 // Read settings to check maintenance mode
 const settingsPath = path.resolve(process.cwd(), '../src/data/settings.json');
-let maintenanceMode = false;
-try {
-  const raw = fs.readFileSync(settingsPath, 'utf-8');
-  const settings = JSON.parse(raw);
-  maintenanceMode = settings.maintenance_mode === true;
-} catch (e) {}
+let maintenanceMode = import.meta.env.PUBLIC_MAINTENANCE_MODE === 'true';
+
+// Fallback to settings.json if not forced by env var
+if (!maintenanceMode) {
+  try {
+    const raw = fs.readFileSync(settingsPath, 'utf-8');
+    const settings = JSON.parse(raw);
+    maintenanceMode = settings.maintenance_mode === true;
+  } catch (e) {}
+}
 
 ---
 

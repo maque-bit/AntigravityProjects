@@ -32,6 +32,7 @@ jobs:
         run: npm run build --prefix web
         env:
           GH_PAGES_BASE: ${{ vars.GH_PAGES_BASE }}
+          PUBLIC_MAINTENANCE_MODE: ${{ vars.PUBLIC_MAINTENANCE_MODE }}
 
       - name: Setup Pages
         uses: actions/configure-pages@v4

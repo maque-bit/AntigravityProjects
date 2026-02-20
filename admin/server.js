@@ -37,7 +37,13 @@ function readJson(filePath, defaultValue) {
 }
 
 function writeJson(filePath, data) {
-    fs.writeFileSync(filePath, JSON.stringify(data, null, 2));
+    try {
+        fs.writeFileSync(filePath, JSON.stringify(data, null, 2));
+        console.log(`Successfully wrote to ${filePath}`);
+    } catch (e) {
+        console.error(`Failed to write to ${filePath}:`, e);
+        throw e;
+    }
 }
 
 // --- API Endpoints ---
@@ -89,8 +95,13 @@ app.get('/api/settings', (req, res) => {
 
 // Update settings
 app.post('/api/settings', (req, res) => {
-    writeJson(SETTINGS_PATH, req.body);
-    res.json({ success: true });
+    console.log('Received settings update request:', req.body);
+    try {
+        writeJson(SETTINGS_PATH, req.body);
+        res.json({ success: true });
+    } catch (e) {
+        res.status(500).json({ success: false, error: e.message });
+    }
 });
 
 // Run scripts
@@ -111,6 +122,16 @@ app.post('/api/collect', (req, res) => {
 
 app.post('/api/analyze', (req, res) => {
     runScript('npm run analyze', res);
+});
+
+app.post('/api/deploy', (req, res) => {
+    const command = 'git add src/data/analyzed_data.json src/data/settings.json && git commit -m "chore: update data from admin panel" && git push || echo "No changes to commit or push failed"';
+    runScript(command, res);
+});
+
+// Fallback 404 for API
+app.use('/api', (req, res) => {
+    res.status(404).json({ success: false, error: 'API endpoint not found. The server might need a restart to apply the latest updates.' });
 });
 
 const PORT = process.env.PORT || 3000;
