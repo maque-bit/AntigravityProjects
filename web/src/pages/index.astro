@@ -7,13 +7,18 @@ import path from 'node:path';
 // Read data
 const dataPath = path.resolve(process.cwd(), '../src/data/analyzed_data.json');
 let projects = [];
+let loadError = null;
+
+console.log(`[Build] Attempting to read data from: ${dataPath}`);
+
 try {
   const raw = fs.readFileSync(dataPath, 'utf-8');
   const parsed = JSON.parse(raw);
-  // Filter only published projects and optionally check settings for maintenance mode
   projects = parsed.projects.filter((p: any) => p.status === 'published');
-} catch (e) {
-  console.error("Failed to read analyzed data:", e);
+  console.log(`[Build] Successfully loaded ${parsed.projects.length} projects (${projects.length} published)`);
+} catch (e: any) {
+  console.error("[Build] Failed to read analyzed data:", e);
+  loadError = e.message;
 }
 
 // Read settings to check maintenance mode
