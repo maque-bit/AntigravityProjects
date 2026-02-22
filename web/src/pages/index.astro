@@ -21,6 +21,16 @@ try {
   loadError = e.message;
 }
 
+// Extract unique categories for filtering
+const allCategories = projects.reduce((acc: string[], p: any) => {
+  if (p.analysis && p.analysis.category) {
+    p.analysis.category.forEach((c: string) => {
+      if (!acc.includes(c)) acc.push(c);
+    });
+  }
+  return acc;
+}, []).sort();
+
 // Read settings to check maintenance mode
 const settingsPath = path.resolve(process.cwd(), '../src/data/settings.json');
 let maintenanceMode = import.meta.env.PUBLIC_MAINTENANCE_MODE === 'true';
@@ -66,6 +76,18 @@ if (!maintenanceMode) {
             <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path></svg>
           </button>
         </div>
+      </div>
+
+      <!-- Filter Categories -->
+      <div class="flex flex-wrap gap-2 mb-8" id="category-filters">
+        <button data-filter="all" class="category-btn active px-4 py-1.5 rounded-full text-sm font-semibold bg-gray-800 text-white shadow-sm hover:bg-gray-700 transition-colors">
+          All
+        </button>
+        {allCategories.map((cat: string) => (
+          <button data-filter={cat} class="category-btn px-4 py-1.5 rounded-full text-sm font-semibold bg-white text-gray-600 border border-gray-200 shadow-sm hover:bg-gray-50 hover:text-gray-900 transition-colors">
+            {cat}
+          </button>
+        ))}
       </div>
 
       <!-- Grid View Container -->
@@ -121,6 +143,45 @@ if (!maintenanceMode) {
       listView.classList.add('flex');
       gridView.classList.add('hidden');
       gridView.classList.remove('grid');
+    });
+  }
+
+  // Category filtering logic
+  const categoryBtns = document.querySelectorAll('.category-btn');
+  const projectCards = document.querySelectorAll('article[data-categories]');
+  let currentFilter = 'all';
+
+  function filterProjects() {
+    projectCards.forEach(card => {
+      const parentLink = card.closest('a');
+      if (!parentLink) return;
+      
+      if (currentFilter === 'all') {
+        parentLink.style.display = '';
+      } else {
+        const categories = card.getAttribute('data-categories')?.split(',') || [];
+        if (categories.includes(currentFilter)) {
+          parentLink.style.display = '';
+        } else {
+          parentLink.style.display = 'none';
+        }
+      }
+    });
+  }
+
+  if (categoryBtns.length > 0) {
+    categoryBtns.forEach(btn => {
+      btn.addEventListener('click', () => {
+        // Update styling for all buttons
+        categoryBtns.forEach(b => {
+          b.className = "category-btn px-4 py-1.5 rounded-full text-sm font-semibold bg-white text-gray-600 border border-gray-200 shadow-sm hover:bg-gray-50 hover:text-gray-900 transition-colors";
+        });
+        // Set active styling for the clicked button
+        btn.className = "category-btn active px-4 py-1.5 rounded-full text-sm font-semibold bg-gray-800 text-white shadow-sm hover:bg-gray-700 transition-colors";
+
+        currentFilter = btn.getAttribute('data-filter') || 'all';
+        filterProjects();
+      });
     });
   }
 </script>
