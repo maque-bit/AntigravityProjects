@@ -14,10 +14,16 @@ export async function getStaticPaths() {
     console.error("Failed to read analyzed data for paths:", e);
   }
 
-  return projects.map((p: any) => ({
-    params: { slug: encodeURIComponent(p.url) },
-    props: { project: p },
-  }));
+  return projects.map((p: any) => {
+    // Generate a safe slug from the GitHub URL (e.g. PrefectHQ-fastmcp)
+    const urlPath = p.url.replace(/^https?:\/\/(www\.)?github\.com\//, '');
+    const safeSlug = urlPath.replace(/[^a-zA-Z0-9]/g, '-').toLowerCase();
+    
+    return {
+      params: { slug: safeSlug },
+      props: { project: p },
+    };
+  });
 }
 
 const { project } = Astro.props;

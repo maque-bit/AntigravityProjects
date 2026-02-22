@@ -18,7 +18,10 @@ export interface Props {
 }
 
 const { project, viewMode } = Astro.props;
-const slug = encodeURIComponent(project.url);
+
+// Generate a safe slug from the GitHub URL (e.g. PrefectHQ-fastmcp)
+const urlPath = project.url.replace(/^https?:\/\/(www\.)?github\.com\//, '');
+const slug = urlPath.replace(/[^a-zA-Z0-9]/g, '-').toLowerCase();
 
 // A color map for categories, matching the vibrant mockup style
 const categoryColors: Record<string, string> = {

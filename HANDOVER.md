@@ -1,38 +1,16 @@
 # HANDOVER.md
 
-## 今回の作業内容
+## Accomplishments
+- GitHub CLI (gh) の認証を復旧し、GitHub Actions による CI/CD デプロイメントを再開させました。
+- `analyzed_data.json` の `published` フラグを手動で `true` に変更し、AIによる分析結果がフロントエンドに反映されることを確認しました。
+- Admin UIからの自動デプロイ機能 (`deploy.sh`) を修正し、`analyzed_data.json` などのUntrackedなファイルもコミットし、Force Pushで確実に本番反映させるロジックを実装しました。
+- Filters function implemented and logo `BASE_URL` link corrected.
+- Analyzer executed and AI curation of all 90 items completed with `analyzed_data.json` generated.
+- `ProjectCard.astro` and `[slug].astro` dynamic routing path generation fixed to avoid 404 errors by using a GitHub Owner-Repo format instead of percent-encoded URLs.
+- Added a "Beginner's Guide" page (`beginner.astro`) with a "Japanet-style" benefit presentation and 3 recommended servers (`fetch`, `filesystem`, `brave-search`) with a 1-minute setup guide to lower the barrier for newcomers. Added a prominent banner to the Top Page.
 
-### 完了したこと
-- **ダッシュボードのビジュアルデザイン定義**: 
-  - ダークモード、グラスモーフィズム、ネオンアクセントを基調としたプレミアムなデザイン案を作成。
-  - エンジニアの好奇心を刺激する「キャッチフレーズ」や「Wow Factor」を含む分析軸を定義。
-- **AI分析エンジン (`analyzer`) の実装**:
-  - `src/analyzer/index.js` を作成し、Gemini API (2.0 Flash) を統合。
-  - 未分析のリポジトリを自動検知し、エンジニア目線の日本語解説データを生成するロジックを実装。
-  - `analyzed_data.json` への出力と、実行ログ (`analyzer.log`) の記録機能を実装。
-- **セキュリティとリポジトリ管理**:
-  - 秘匿情報（`.env`, `config.json`）の誤コミットを防ぐ `scripts/check-secrets.sh` を実装・強化。
-  - 不用意に作成されたタイポディレクトリ (`MCP44Antigravity`) の削除と、`.gitignore` の再確認。
-- **GitHubへのプッシュ**:
-  - 現在の進捗（Collector, Admin, Analyzerの基盤）を GitHub リモートリポジトリへプッシュ。
+## Next Steps
+(Current development phase is successfully completed. Awaiting user's manual push to GitHub and production verification, and identifying new objectives/features if any)
 
-### 対応中のこと
-- 特になし（現在のフェーズのタスクはすべて完了）。
-
-### 未対応のこと
-- **Webフロントエンド (`web`) の構築**: 次のセッションの主要タスク。
-  - Astroを使用したダッシュボード（一覧画面）の実装。
-  - 各プロジェクトの「詳細画面」の実装。
-
-## 決定した設計方針・内容
-- **Engineer-First 分析**: 単なるマニュアル的な要約ではなく、技術者が「これを使ってみたい」と思える、面白さや効率化（`dev_utility`）に焦点を当てた分析を行う。
-- **インテリジェント・フォールバック**: Gemini API のモデル ID や API バージョンの差異に対応するため、自動的に `gemini-1.5-flash` や `gemini-2.0-flash` を切り替えて試行するロジックを採用。
-
-## 発生した問題と対応
-- **問題**: Gemini API (v1) で `gemini-1.5-flash` などのモデル ID が 404 (Not Found) となる。
-- **原因**: API バージョンやリージョンにより、使用可能なモデル ID の命名規則が異なる場合がある。
-- **対応**: 複数のモデル ID (flash-latest, 2.0-flash等) を順番に試行するフォールバックロジックを `analyzer/index.js` に実装。結果、`gemini-2.0-flash` での成功を確認した。
-
-## 学んだこと
-- Gemini API のモデル ID を指定する際、SDK のバージョンや API エンドポイント（v1 vs v1beta）によって挙動が変わるため、プログラム側で柔軟に ID を切り替える構成が望ましい。
-- 「エンジニア向け」という具体的なターゲットを意識したプロンプト設計が、生成されるコンテンツの質（ワクワク感）を大きく左右する。
+## 注意点
+- `analyzed_data.json` を手動、または管理画面から更新した際は、必ず `git push`（または管理画面の Deploy ボタン）で本番に反映させる必要があります。現在、管理画面の Deploy ボタンは内部で git コマンドを実行してプッシュする仕組みになっています。

@@ -58,9 +58,23 @@ if (!maintenanceMode) {
         <h1 class="text-4xl font-extrabold text-gray-900 tracking-tight sm:text-5xl mb-4 leading-tight">
           Discover the Best <span class="bg-clip-text text-transparent bg-gradient-to-r from-blue-600 to-indigo-600">MCP Servers</span>
         </h1>
-        <p class="text-[15px] sm:text-base text-gray-500 max-w-2xl mx-auto font-medium">
+        <p class="text-[15px] sm:text-base text-gray-500 max-w-2xl mx-auto font-medium mb-12">
           AIが分析・キュレーションした、開発者のための最高にワクワクするModel Context Protocolサーバーの一覧です。
         </p>
+
+        {/* Beginner Guide Banner */}
+        <a href={`${import.meta.env.BASE_URL}beginner`} class="inline-flex items-center gap-3 bg-gradient-to-r from-yellow-50 to-orange-50 border border-yellow-200 hover:border-yellow-300 hover:shadow-md transition-all px-5 py-4 sm:px-6 rounded-2xl max-w-2xl mx-auto text-left group w-full">
+          <div class="bg-yellow-400 text-yellow-900 rounded-full p-2.5 shrink-0 group-hover:scale-110 group-hover:-rotate-3 transition-transform shadow-sm">
+            <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 20 20"><path d="M11 3a1 1 0 10-2 0v1a1 1 0 102 0V3zM15.657 5.757a1 1 0 00-1.414-1.414l-.707.707a1 1 0 001.414 1.414l.707-.707zM18 10a1 1 0 01-1 1h-1a1 1 0 110-2h1a1 1 0 011 1zM5.05 6.464A1 1 0 106.464 5.05l-.707-.707a1 1 0 00-1.414 1.414l.707.707zM5 10a1 1 0 01-1 1H3a1 1 0 110-2h1a1 1 0 011 1zM8 16v-1h4v1a2 2 0 11-4 0zM12 14c.015-.34.208-.646.477-.859a4 4 0 10-4.954 0c.27.213.462.519.476.859h4.002z"></path></svg>
+          </div>
+          <div class="flex-1">
+            <h3 class="text-gray-900 font-extrabold text-base sm:text-lg mb-0.5 group-hover:text-blue-700 transition-colors">MCPって何がおいしいの？🐥</h3>
+            <p class="text-xs sm:text-sm text-gray-700 font-medium">初めての方へ。「手作業でのコピペ」から解放される魔法の設定方法と、おすすめサーバー3選！</p>
+          </div>
+          <div class="ml-auto text-yellow-600 group-hover:translate-x-1 transition-transform pl-2">
+            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path></svg>
+          </div>
+        </a>
       </section>
 
       <div class="flex justify-between items-center mb-6">
