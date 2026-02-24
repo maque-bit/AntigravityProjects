@@ -53,6 +53,14 @@ if (!maintenanceMode) {
     maintenanceMode = settings.maintenance_mode === true;
   } catch (e) {}
 }
+
+// Format date string
+function formatDate(dateStr: string | undefined | null) {
+  if (!dateStr) return 'N/A';
+  const date = new Date(dateStr);
+  if (isNaN(date.getTime())) return 'N/A';
+  return date.toLocaleDateString('en-US', { year: 'numeric', month: 'short', day: 'numeric' });
+}
 ---
 
 <Layout title={`${project.name} - MCP Insider`}>
@@ -152,14 +160,40 @@ if (!maintenanceMode) {
             </div>
 
             <!-- Security / Safety -->
-            <div class="bg-white/60 backdrop-blur-sm p-4 rounded-xl shadow-sm border border-white/80">
+            <div class="bg-white/60 backdrop-blur-sm p-4 rounded-xl shadow-sm border border-white/80 group relative">
                <h3 class="text-xs font-bold tracking-wider text-gray-500 uppercase mb-2 flex items-center gap-1.5">
                  <svg class="w-3.5 h-3.5 text-blue-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"></path></svg>
                  Safety Level
                </h3>
-               <span class={`inline-block px-3 py-1.5 rounded-lg text-xs font-bold shadow-sm ${project.analysis.safety_level === 'Safe' ? 'bg-green-100 text-green-800 border-green-200' : 'bg-orange-100 text-orange-800 border-orange-200'} border`}>
+               <span class={`inline-block px-3 py-1.5 rounded-lg text-xs font-bold shadow-sm cursor-help ${project.analysis.safety_level === 'Safe' ? 'bg-green-100 text-green-800 border-green-200' : 'bg-orange-100 text-orange-800 border-orange-200'} border`} title={project.analysis.safety_reason || '理由未設定（再分析推奨）'}>
                  {project.analysis.safety_level}
                </span>
+               
+               {/* Tooltip for safety_reason */}
+               <div class="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 w-48 opacity-0 group-hover:opacity-100 transition-opacity duration-200 pointer-events-none z-10">
+                 <div class="bg-gray-900 text-white text-[11px] font-medium p-2 rounded-lg shadow-xl relative text-center">
+                   {project.analysis.safety_reason || '詳細な理由は未設定です。再分析を実行してください。'}
+                   <div class="absolute -bottom-1 left-1/2 -translate-x-1/2 w-2 h-2 bg-gray-900 rotate-45"></div>
+                 </div>
+               </div>
+            </div>
+
+            <!-- Repository Info (Dates) -->
+            <div class="bg-white/60 backdrop-blur-sm p-4 rounded-xl shadow-sm border border-white/80">
+              <h3 class="text-xs font-bold tracking-wider text-gray-500 uppercase mb-3 flex items-center gap-1.5">
+                 <svg class="w-3.5 h-3.5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path></svg>
+                 Repository Info
+              </h3>
+              <div class="space-y-2">
+                <div class="flex justify-between items-center text-sm">
+                  <span class="text-gray-500 font-medium">Released</span>
+                  <span class="text-gray-900 font-semibold">{formatDate(project.created_at)}</span>
+                </div>
+                <div class="flex justify-between items-center text-sm">
+                  <span class="text-gray-500 font-medium">Updated</span>
+                  <span class="text-gray-900 font-semibold">{formatDate(project.updated_at)}</span>
+                </div>
+              </div>
             </div>
 
           </div>

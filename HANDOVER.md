@@ -1,19 +1,50 @@
-# HANDOVER.md
+# 引き継ぎノート (HANDOVER)
 
-## Accomplishments
-- GitHub CLI (gh) の認証を復旧し、GitHub Actions による CI/CD デプロイメントを再開させました。
-- `analyzed_data.json` の `published` フラグを手動で `true` に変更し、AIによる分析結果がフロントエンドに反映されることを確認しました。
-- Admin UIからの自動デプロイ機能 (`deploy.sh`) を修正し、`analyzed_data.json` などのUntrackedなファイルもコミットし、Force Pushで確実に本番反映させるロジックを実装しました。
-- Filters function implemented and logo `BASE_URL` link corrected.
-- Analyzer executed and AI curation of all 90 items completed with `analyzed_data.json` generated.
-- `ProjectCard.astro` and `[slug].astro` dynamic routing path generation fixed to avoid 404 errors by using a GitHub Owner-Repo format instead of percent-encoded URLs.
-- Added a "Beginner's Guide" page (`beginner.astro`) with a "Japanet-style" benefit presentation and 3 recommended servers (`fetch`, `filesystem`, `brave-search`) with a 1-minute setup guide to lower the barrier for newcomers. Added a prominent banner to the Top Page.
-- **[Phase 3 Updates]**: 
-    - Fixed a bug where `index.astro` displayed 0 projects due to `analyzer` overwriting status back to "draft" on subsequent runs. Existing status is now preserved.
-    - Added OS-specific config paths (Mac / Windows VPCode) and a handy JSON clipboard copy functionality to `beginner.astro`.
+## 今回のセッションでの作業内容と進捗
+MCP Insiderプロジェクトのデプロイ時の不具合解消、UI機能の追加、初心者向けページの新規作成を実施しました。
+最終的に、すべての予定タスクとフィードバック対応が完了し、プロジェクト一覧や詳細ページが本番環境（GitHub Pages）で正常に表示・リンク遷移することを確認済みです。
 
-## Next Steps
-(Phase 3 updates are successfully complete. Awaiting user's manual push to GitHub and a final visual check on production. Let's decide on the next phase features after this!)
+## 完了したタスク
+- GitHub CLI (gh) の認証復旧とデプロイメントの再開。
+- `analyzed_data.json` のデプロイ反映のための `deploy.sh` 修正。
+- トップページのカテゴリフィルタリング機能の実装。
+- トップページのロゴリンクとHomeリンクに `BASE_URL` を適用し、サブディレクトリでのリンク切れを修正。
+- 詳細ページ (`[slug].astro`) へのリンクパス生成ロジックを、パーセントエンコードから安全な `Owner-Repo` 形式に変更。
+- 詳細ページの「Back to Projects」リンクに `BASE_URL` を適用し404エラーを解消。
+- Beginner's Guide（初心者向け解説ページ `beginner.astro`）の新規作成とトップページからの導線追加。
+- 初心者向けページへVSCode/Windows向けとMac向けの設定ファイルパスを記載。
+- 初心者向けページヘ設定JSONをワンクリックでクリップボードへコピーできるボタンを実装。
+- すべてのレポジトリデータに対するAnalyzer（`gemini-1.5-flash`等のAPIを利用した分析生成）の実行と反映。
+- Analyzer実行時に既存の `published` ステータスが `draft` で上書きされてしまう問題の修正と全データの復元。
+- Analyzerのプロンプト改修（`safety_reason` の生成と直訳『顧客』の禁止）。
+- 詳細ページ (`[slug].astro`) への「Released」「Updated」日付と、Safety Levelのホバー理由ツールチップの追加実装。
+- `analyzed_data.json` 内データのデフォルトステータスを `published` とし、即座に一覧公開とする運用ルール変更。
+- Astro側でのレイアウト不備 (`overflow-hidden` によるツールチップ非表示) と日付アクセスパスのフォールバック修正。
 
-## 注意点
-- `analyzed_data.json` を手動、または管理画面から更新した際は、必ず `git push`（または管理画面の Deploy ボタン）で本番に反映させる必要があります。現在、管理画面の Deploy ボタンは内部で git コマンドを実行してプッシュする仕組みになっています。
+## 未完了のタスク、次回のセッションで着手すること
+- 特別な残課題なし（データ同期やCI/CDへの完全自動化についてはユーザーの判断に委ねる）。
+
+- GitHub Pages等のサブディレクトリ（`/MCPInsider/`）環境で動作させるため、Astroのルーティングには基本的に `${import.meta.env.BASE_URL}` を使用する。
+- 存在しないURLやパーセントエンコーディングによるルーティングバグを回避するため、詳細ページURLはGitHubのURLをパースし、特殊文字を `-` に変換した英数字のみの安全な文字列(`slug`)を利用する。
+- 運用ルール変更に伴い、`analyzed_data.json` をAPIで更新する際は `status: published` をデフォルトとして保存・公開する。
+
+## 捨てた選択肢と理由
+- **パーセントエンコード(`%3A`など)を用いた詳細画面のslug生成**: GitHub Pagesサーバー（静的ファイルホスティング）の仕様上、実在するファイルパスの解釈に失敗して404になることが判明したため、英数字ハイフンのみの文字列に置換する方針に変更。
+- **ターミナル経由でのAI自律テスト・ビルド**: ターミナルで `npm run ...` などのコマンドがハングアップしてしまう環境問題があったため、自律的なローカル確認は一部諦め、生成したコードをユーザーによる手動コマンドで検証してもらう運用に切り替えました。
+
+## 発生した問題とその原因、対応
+1. **問題**: GitHub Pagesでプロジェクト詳細にアクセスしたときや「戻る」を押した時に404エラーになる。
+   **原因**: サブディレクトリ運用においてルートURL（`/`）を参照していたり、URLのslugがサーバー側のファイルパスとして正常に解決できない文字を含んでいたため。
+   **対応**: リンクを `BASE_URL` を加味した形に変更。slugの生成ロジックを英数ハイフンのみに正規化して解決。
+2. **問題**: `analyzed_data.json` が読み込まれているのにトップページで0件表示になる。
+   **原因**: 再分析の際に、すべてのプロジェクトの `status` プロパティを `draft` に上書き保存してしまったため、フロントの「`published` のみ表示」フィルタに引っかからなくなった。
+   **対応**: 既存データを復旧するスクリプトを回し、Analyzerのコード側で「既存の `status` がある場合は維持する」仕様に修正して解決。
+3. **問題**: ターミナルコマンドがハングアップする。
+   **原因**: 詳細不明（環境系のプロセス通信の不調等）。
+   **対応**: 検証とデプロイアクションをユーザーに手動で実行してもらう運用で回避しました。問題自体は未解決。
+4. **問題**: Analyzer実行後にプロジェクトが一覧から消える（0件問題）。
+   **原因**: （過去の記載では「既存を維持する」としたが）`auto_publish` の評価が以前の `draft` を引き継いでしまう「強すぎる既存維持ロジック」であったため。
+   **対応**: Analyzer のコード側で、結果保存時に常に `status: "published"` を付与するようロジックをシンプルに改修した。
+5. **問題**: `[slug].astro` にてSafety Levelのツールチップが見切れる。
+   **原因**: 親要素の `<article>` ライクなカードのスタイルに `overflow-hidden` 相当のレイアウトが適用されており、絶対配置（absolute）のふきだしが隠れていた。
+   **対応**: 実機確認で問題が出たため、HTMLの構造を一部変更（要素の独立）と、要素自体の `title` 属性へのフォールバックを実装して隠れないように対応した。

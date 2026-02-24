@@ -74,6 +74,7 @@ async function run() {
                         stars: repo.stargazers_count,
                         description: repo.description,
                         url: repo.html_url,
+                        created_at: repo.created_at,
                         updated_at: repo.updated_at,
                         language: repo.language,
                         license: repo.license ? repo.license.spdx_id : null

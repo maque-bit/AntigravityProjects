@@ -57,8 +57,10 @@ async function analyzeProject(project) {
         let model = genAI.getGenerativeModel({ model: modelId });
 
         const prompt = `
-あなたは技術トレンドに敏感なエンジニア兼テックライターです。
-以下の MCP (Model Context Protocol) サーバーのリポジトリ情報を分析し、開発者がワクワクするような紹介文を日本語で作成してください。
+あなたはこのMCP (Model Context Protocol) サーバーのエンドユーザー（開発者・AI等）に向けて、技術トレンドに敏感なエンジニア兼テックライターとして、リポジトリ情報を分析しワクワクするような紹介文を日本語で作成してください。
+
+【重要な翻訳ルール】
+- ユーザー層は「開発者」「AI(LLM)」「ユーザー」です。直訳で不自然な「顧客 (Customer)」という表現は絶対に使用しないでください。
 
 リポジトリ名: ${project.name}
 GitHub説明: ${project.description}
@@ -70,8 +72,9 @@ URL: ${project.url}
 3. wow_factor: このプロジェクトの技術的にユニークな点や、エンジニアが驚くポイント（1文）。
 4. dev_utility: このツールを導入することで、開発効率がどれくらい上がるか（1-10の数値）。
 5. category: ['Database', 'Search', 'API', 'Utility', 'Automation', 'DevTools', 'Communication'] から最適な複数を。
-6. safety_level: 'Safe' (読み取りのみ等), 'Caution' (書き込み/実行権限が必要等), 'Unknown'。
-7. use_cases: 具体的に「これを使って〇〇ができる」というシナリオを2-3個。
+6. safety_level: 'Safe' (読み取りのみ等), 'Caution' (書き込み/実行権限が必要、または外部依存が強い等), 'Unknown'。
+7. safety_reason: safety_level をそのように判定した具体的な根拠・理由（例: 「ローカルファイルの書き込み権限を要求するためCaution」など、1文程度で）。
+8. use_cases: 具体的に「これを使って〇〇ができる」というシナリオを2-3個（箇条書きの配列）。
 
 出力は純粋なJSONのみにしてください（マークダウンのコードブロックは不要）。
 `;
@@ -143,8 +146,8 @@ async function main() {
             const analysis = await analyzeProject(repo);
             if (analysis) {
                 const existing = projectsMap.get(repo.url);
-                // 既存のステータスがあればそれを維持、なければ新規（auto_publish設定依存）
-                const status = existing && existing.status ? existing.status : (settings.auto_publish ? "published" : "draft");
+                // 運用変更: 常に 'published' として公開する
+                const status = "published";
 
                 projectsMap.set(repo.url, {
                     ...repo,
